@@ -5,7 +5,7 @@ Linear Regression Analysis on Brooklyn Real Estate Data (2016-2020)
 
 In this project, I conducted a comprehensive analysis of Brooklyn real estate purchases from 2016 to 2020, focusing on single-family residences and single-unit apartments or condos. I used linear regression models to explain housing prices during this period. The analysis involved extensive data cleaning, feature engineering, and model evaluation, ensuring optimal predictive accuracy while maintaining the model's interpretability. This work was part of my final assignment for my MS program.
 
-Part 3: SQL CODE
+Part 2: SQL CODE
 
 Sales Performance Analysis for a Retail Store
 Overview
