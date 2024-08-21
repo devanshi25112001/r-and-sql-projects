@@ -1,4 +1,4 @@
-Part 1: 
+Part 1: This was done in R Programming Language
 
 Time Series Analysis and Forecasting of Beer Sales & CME Seat Prices
 Overview
@@ -28,7 +28,11 @@ Comparison & Results
 Plots: Included plots comparing actual vs. forecasted values for both methods.
 MSE Calculation: Computed MSE for 1990 to determine model accuracy.
 Computational Time: Discussed the difference in computation time between the two methods.
-Part 2: Interpolation of CME Seat Prices
+
+
+Part 2: This was done in R Programming Language
+
+Interpolation of CME Seat Prices
 Methodology
 Algorithm: Developed a custom algorithm to interpolate missing seat prices, creating a complete monthly time series for each seat class.
 Why This Method?: Selected this approach for its ability to handle irregularly spaced data and ensure consistency across all three datasets.
