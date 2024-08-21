@@ -138,3 +138,134 @@ GROUP BY c.CustomerName
 ORDER BY OrderCount DESC;
 
 
+--Added a Suppliers Table
+CREATE TABLE Suppliers (
+    SupplierID INT PRIMARY KEY,
+    SupplierName VARCHAR(100),
+    ContactEmail VARCHAR(100),
+    Phone VARCHAR(20)
+);
+
+--Added a ProductSuppliers Table (Many-to-Many Relationship)
+
+CREATE TABLE ProductSuppliers (
+    ProductSupplierID INT PRIMARY KEY,
+    ProductID INT,
+    SupplierID INT,
+    SupplyPrice DECIMAL(10, 2),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+    FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID)
+);
+
+--Added a CustomerFeedback Table:
+CREATE TABLE CustomerFeedback (
+    FeedbackID INT PRIMARY KEY,
+    CustomerID INT,
+    ProductID INT,
+    FeedbackText TEXT,
+    Rating INT CHECK(Rating BETWEEN 1 AND 5),
+    FeedbackDate DATE,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+INSERT INTO Suppliers (SupplierID, SupplierName, ContactEmail, Phone)
+VALUES
+(1, 'TechCorp', 'contact@techcorp.com', '555-1234'),
+(2, 'FurniSuppliers', 'sales@furnisuppliers.com', '555-5678');
+INSERT INTO ProductSuppliers (ProductSupplierID, ProductID, SupplierID, SupplyPrice)
+VALUES
+(1, 1, 1, 750.00),  -- Laptop from TechCorp
+(2, 2, 1, 550.00),  -- Smartphone from TechCorp
+(3, 3, 2, 100.00);  -- Desk Chair from FurniSuppliers
+INSERT INTO CustomerFeedback (FeedbackID, CustomerID, ProductID, FeedbackText, Rating, FeedbackDate)
+VALUES
+(1, 1, 1, 'Great laptop, very fast!', 5, '2023-07-16'),
+(2, 2, 2, 'Good phone, but battery life could be better.', 4, '2023-07-19'),
+(3, 3, 3, 'Comfortable chair, but a bit overpriced.', 3, '2023-07-21');
+
+--Supplier Analysis: Product Supply Costs
+
+SELECT s.SupplierName, p.ProductName, ps.SupplyPrice,
+    (p.Price - ps.SupplyPrice) AS ProfitMargin
+FROM Suppliers s
+JOIN ProductSuppliers ps ON s.SupplierID = ps.SupplierID
+JOIN Products p ON ps.ProductID = p.ProductID
+ORDER BY ProfitMargin DESC;
+
+---Customer Feedback Summary:
+
+SELECT c.CustomerName, p.ProductName, cf.Rating, cf.FeedbackText
+FROM Customers c
+JOIN CustomerFeedback cf ON c.CustomerID = cf.CustomerID
+JOIN Products p ON cf.ProductID = p.ProductID
+ORDER BY cf.FeedbackDate DESC;
+
+---Average Product Rating:
+
+SELECT p.ProductName, AVG(cf.Rating) AS AverageRating
+FROM Products p
+JOIN CustomerFeedback cf ON p.ProductID = cf.ProductID
+GROUP BY p.ProductName
+ORDER BY AverageRating DESC;
+
+---Identify Most Profitable Suppliers:
+
+SELECT s.SupplierName, SUM(p.Price - ps.SupplyPrice) AS TotalProfit
+FROM Suppliers s
+JOIN ProductSuppliers ps ON s.SupplierID = ps.SupplierID
+JOIN Products p ON ps.ProductID = p.ProductID
+GROUP BY s.SupplierName
+ORDER BY TotalProfit DESC;
+
+---Customer Lifetime Value (CLV):
+
+SELECT c.CustomerName, SUM(o.TotalAmount) AS LifetimeValue
+FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID
+GROUP BY c.CustomerName
+ORDER BY LifetimeValue DESC;
+
+---Customer Feedback Distribution:
+
+SELECT p.ProductName, 
+    SUM(CASE WHEN cf.Rating = 5 THEN 1 ELSE 0 END) AS FiveStars,
+    SUM(CASE WHEN cf.Rating = 4 THEN 1 ELSE 0 END) AS FourStars,
+    SUM(CASE WHEN cf.Rating = 3 THEN 1 ELSE 0 END) AS ThreeStars,
+    SUM(CASE WHEN cf.Rating = 2 THEN 1 ELSE 0 END) AS TwoStars,
+    SUM(CASE WHEN cf.Rating = 1 THEN 1 ELSE 0 END) AS OneStar
+FROM Products p
+JOIN CustomerFeedback cf ON p.ProductID = cf.ProductID
+GROUP BY p.ProductName
+ORDER BY FiveStars DESC;
+
+---Reorder Alerts Based on Supplier Lead Time:
+
+SELECT p.ProductName, ps.SupplyPrice, p.StockQuantity,
+    CASE
+        WHEN p.StockQuantity < 10 THEN 'Reorder Required'
+        ELSE 'Stock Sufficient'
+    END AS StockStatus,
+    s.SupplierName
+FROM Products p
+JOIN ProductSuppliers ps ON p.ProductID = ps.ProductID
+JOIN Suppliers s ON ps.SupplierID = s.SupplierID
+ORDER BY p.StockQuantity ASC;
+
+---Dynamic Pricing Suggestions Based on Sales Performance:
+SELECT p.ProductName, p.Price, SUM(od.Quantity) AS TotalSold,
+    CASE
+        WHEN SUM(od.Quantity) > 50 THEN p.Price * 1.1  -- Increase price by 10% if high demand
+        WHEN SUM(od.Quantity) < 10 THEN p.Price * 0.9  -- Decrease price by 10% if low demand
+        ELSE p.Price
+    END AS SuggestedPrice
+FROM Products p
+JOIN OrderDetails od ON p.ProductID = od.ProductID
+GROUP BY p.ProductName, p.Price;
+
+
+
+
+
+
+
