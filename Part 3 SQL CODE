@@ -58,8 +58,53 @@ VALUES
 (3, 2, 2, 1, 699.99),
 (4, 3, 3, 1, 129.99);
 
+-- Inserting sample inventory restocks
+INSERT INTO Inventory (InventoryID, ProductID, RestockDate, QuantityRestocked)
+VALUES
+(1, 1, '2023-07-01', 15),
+(2, 2, '2023-07-01', 20),
+(3, 3, '2023-07-01', 30);
 
 --SQL Queries for Analysis
+
+
+--Customer Segmentation Based on Purchase History
+
+SELECT CustomerName, COUNT(OrderID) AS OrderCount, SUM(TotalAmount) AS TotalSpent,
+CASE
+    WHEN SUM(TotalAmount) > 1000 THEN 'High Value'
+    WHEN SUM(TotalAmount) BETWEEN 500 AND 1000 THEN 'Medium Value'
+    ELSE 'Low Value'
+END AS CustomerSegment
+FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID
+GROUP BY CustomerName;
+
+--Inventory Management: Stock Levels and Reorder Alerts
+SELECT p.ProductName, p.StockQuantity,
+CASE
+    WHEN p.StockQuantity < 10 THEN 'Reorder Required'
+    ELSE 'Stock Sufficient'
+END AS StockStatus
+FROM Products p;
+
+--- Customer Loyalty Program Suggestions
+SELECT CustomerName, SUM(TotalAmount) AS TotalSpent,
+CASE
+    WHEN SUM(TotalAmount) > 1000 THEN 'Eligible for Platinum Membership'
+    WHEN SUM(TotalAmount) BETWEEN 500 AND 1000 THEN 'Eligible for Gold Membership'
+    ELSE 'Eligible for Silver Membership'
+END AS LoyaltyProgram
+FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID
+GROUP BY CustomerName;
+
+
+---Monthly Sales Trends
+SELECT DATE_FORMAT(OrderDate, '%Y-%m') AS Month, SUM(TotalAmount) AS MonthlySales
+FROM Orders
+GROUP BY Month
+ORDER BY Month;
 
 --Total Sales per Customer
 
