@@ -30,8 +30,6 @@ MSE Calculation: Computed MSE for 1990 to determine model accuracy.
 Computational Time: Discussed the difference in computation time between the two methods.
 
 
-Part 2: This was done in R Programming Language
-
 Interpolation of CME Seat Prices
 Methodology
 Algorithm: Developed a custom algorithm to interpolate missing seat prices, creating a complete monthly time series for each seat class.
@@ -41,8 +39,8 @@ Other Methods: Considered methods such as spline interpolation and linear regres
 Visualization
 Plots: Three plots showing the original data with gaps and the interpolated monthly data points overlaid in red.
 
-Part 2:
+Part 2: This was done in R Programming Language
 
-Final Assignment: Linear Regression Analysis on Brooklyn Real Estate Data (2016-2020)
+Linear Regression Analysis on Brooklyn Real Estate Data (2016-2020)
 
 In this project, I conducted a comprehensive analysis of Brooklyn real estate purchases from 2016 to 2020, focusing on single-family residences and single-unit apartments or condos. I used linear regression models to explain housing prices during this period. The analysis involved extensive data cleaning, feature engineering, and model evaluation, ensuring optimal predictive accuracy while maintaining the model's interpretability. This work was part of my final assignment for my MS program.
